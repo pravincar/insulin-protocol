@@ -1,0 +1,30 @@
+<div class="topfixed">
+	<md-toolbar color="primary">
+		<i (click)="goBack()" class="material-icons">arrow_back</i>
+		<span>History</span>
+		<span class="filler"></span>
+	</md-toolbar>
+</div>
+<div style="padding:0px 5px 0 5px;box-sizing:border-box;overflow:scroll;height:100%;">	
+	<div style="margin:2em auto;text-align: center;" *ngIf="!forms.length">
+		No data entered yet
+	</div>
+	<md-card *ngFor="let form of forms">
+		<div style="display: flex;flex-wrap: nowrap;font-weight: bold;">
+			<span>{{form.dt | date:'d MMM, HH:mm'}}</span>
+			<span class="filler"></span>
+			<span>{{form.type == 'infusion'?'Infusion':form.data.dosageType}}</span>
+		</div>
+		<div style="display: flex;flex-wrap: nowrap;margin-top: 5px;">
+			<span>Plasma Glucose: {{form.data.plasmaGlucose || ' - '}} mg/dl</span>			
+		</div>
+		<div style="display: flex;flex-wrap: nowrap;margin-top: 5px;">
+			<span>Recommended: {{form.data.dose || ' - '}}</span>
+			<span class="filler"></span>
+			<span>Actual: {{form.data.insulinDose || ' - '}}</span>
+		</div>
+		<div style="margin-top: 5px;">
+			Entered By: {{form.savedby.name}}
+		</div>	
+	</md-card>	
+</div>

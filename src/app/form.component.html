@@ -1,0 +1,56 @@
+<div style="padding:5px;">	
+	<form (ngSubmit)="saveForm()" #insulinForm="ngForm" >
+		<div *ngIf="type=='infusion'">
+			<h3>Insulin Infusion Form</h3>
+			<md-input-container floatPlaceholder="always" class="big">
+				<input mdInput type="number" step="0.1" name="currentRate" placeholder="CURRENT INFUSION RATE (units/hr)" required [(ngModel)]="form.data.currentRate">
+			</md-input-container>
+			<br>
+			<md-input-container floatPlaceholder="always" class="big">
+				<input mdInput type="number" step="0.1" name="plasmaGlucose" placeholder="PLASMA GLUCOSE (mg/dl)" required [(ngModel)]="form.data.plasmaGlucose">
+			</md-input-container>
+			<div style="text-align:center;margin-top:10px;">
+				<button md-raised-button color="primary" class="fullButton" type="submit" [disabled]="!insulinForm.form.valid">Get Recommendation</button>
+				<button md-raised-button class="fullButton" (click)="changeProfile()">Change Insulin Type</button>
+			</div>
+		</div>
+		<div *ngIf="type=='subcutaneous'">
+			<h3>Subcutaneous Insulin Form</h3>
+			<md-select floatPlaceholder="always" placeholder="DOSAGE TYPE" name="dosageType" required [(ngModel)]="form.data.dosageType" class="big">
+				<md-option value="Before Breakfast" >Before Breakfast</md-option>
+				<md-option value="10:00 AM" >10:00 AM</md-option>			
+				<md-option value="Before Lunch">Before Lunch</md-option>
+				<md-option value="Before Evening Snack">Before Evening Snack</md-option>
+				<md-option value="Before Dinner">Before Dinner</md-option>
+				<md-option value="Bedtime">Bedtime</md-option>
+			</md-select>
+			<br>
+			<md-input-container floatPlaceholder="always" class="big">
+				<input mdInput type="number" step="0.1" name="plasmaGlucose" placeholder="PLASMA GLUCOSE (mg/dl)" required [(ngModel)]="form.data.plasmaGlucose">
+			</md-input-container>
+			<div style="text-align:center;margin-top:10px;">
+				<button md-raised-button color="primary" class="fullButton" type="submit" [disabled]="!insulinForm.form.valid">Get Recommendation</button>
+				<button md-raised-button class="fullButton" (click)="changeProfile()">Change Insulin Type</button>
+			</div>			
+		</div>
+		<div *ngIf="type=='subcutaneousDose' || type == 'infusionDose' ">
+			<div *ngIf="recommendation">
+				<h2>Recommendation</h2>
+				<h4>CALCULATION METHOD</h4>
+				<div [innerHTML]="recommendation.text"></div>
+				<h4>INSULIN TYPE</h4>
+				<div [innerHTML]="recommendation.insulinType"></div>
+				<h4>DOSE</h4>
+				<div [innerHTML]="recommendation.dose + (type=='subcutaneousDose'?' units':' units/hr') "></div>
+			</div>
+			<br>
+			<h3>{{recommendation?.dosageType}} Dose</h3>
+			<md-input-container floatPlaceholder="always" class="big">
+				<input mdInput type="number" step="0.1" name="insulinDose" placeholder="INSULIN DOSE" required [(ngModel)]="form.data.insulinDose">
+			</md-input-container>
+			<div style="text-align:center;margin-top:10px;">
+				<button md-raised-button type="submit" [disabled]="!insulinForm.form.valid">Save</button>
+			</div>			
+		</div>		
+	</form>		
+</div>
