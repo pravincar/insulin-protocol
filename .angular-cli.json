@@ -24,7 +24,6 @@
         "../node_modules/material-design-icons-font/iconfont/material-icons.scss"
       ],
       "scripts": [
-        "script.js"
       ],
       "environmentSource": "environments/environment.ts",
       "environments": {
