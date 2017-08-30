@@ -9,7 +9,9 @@ import { Patient } from './patient';
 	patient: Patient = new Patient();
 	constructor(private server: Server){};
 	getPatient(id: number): Promise<any>{
-		if(!this.patient||this.patient.id!=id)return new Promise((resolve,reject)=>{
+		if(!id){
+			this.patient = new Patient();return Promise.resolve();
+		}else if(!this.patient||this.patient.id!=id)return new Promise((resolve,reject)=>{
 			this.server.busy=this.server.getProfile(id).subscribe(patient=>{
 				this.patient=patient;resolve();
 			},e=>reject());

@@ -7,10 +7,12 @@ import { PatientProvider } from './patient-provider.service';
 @Component({
 	moduleId:module.id,
 	template:`
-		<md-toolbar color="primary">
-			<i class="material-icons" (click)="goBack()">arrow_back</i>
-			<span>{{pp.patient.id?pp.patient.name:'New Patient'}}</span>
-		</md-toolbar>
+		<div class="topfixed">
+			<md-toolbar color="primary">
+				<i class="material-icons" (click)="goBack()">arrow_back</i>
+				<span>{{pp.patient.id?pp.patient.name:'New Patient'}}</span>
+			</md-toolbar>
+		</div>	
 		<router-outlet></router-outlet>
 	`
 }) export class PatientComponent implements OnInit{
