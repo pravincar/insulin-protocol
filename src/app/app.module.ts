@@ -1,4 +1,4 @@
-import { NgModule }      from '@angular/core';
+import { NgModule, ErrorHandler }      from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
@@ -8,7 +8,6 @@ import { MdInputModule, MdDialogModule, MdSelectModule, MdSidenavModule, MdToolb
 import { AppComponent }  from './app.component';
 import { PatientListComponent } from './patient-list.component';
 import { PatientComponent } from './patient.component';
-
 
 import { PatientProfileComponent } from './patient-profile.component';
 import { FormComponent } from './form.component';
@@ -27,6 +26,18 @@ import { AuthGuard } from './auth-guard.service';
 import { PatientProvider } from './patient-provider.service';
 
 import { Http, RequestOptions, HttpModule } from '@angular/http';
+
+//Server side error logging
+import * as Raven from 'raven-js';
+Raven
+  .config('https://236c7f86c3ba4f70b0d41d65b2a938b9@sentry.io/212191')
+  .install();
+
+export class RavenErrorHandler implements ErrorHandler {
+  handleError(err:any) : void {
+    Raven.captureException(err);
+  }
+}
 	
 const appRoutes: Routes=[
 	{path:'login',component:LoginComponent},
@@ -55,7 +66,7 @@ const appRoutes: Routes=[
 @NgModule({
   imports:      [ BrowserAnimationsModule, HttpModule, BrowserModule,FormsModule,RouterModule.forRoot(appRoutes),MdInputModule, MdDialogModule, MdSelectModule, MdSidenavModule, MdToolbarModule, MdCardModule, MdProgressSpinnerModule, MdButtonModule ],
   declarations: [ AppComponent,PatientListComponent,PatientProfileComponent,PageNotFoundComponent,FormComponent,PatientComponent,DialogComponent,FormsListComponent,ManageProtocolComponent,ValidateProtocolComponent,LoginComponent ],
-  providers: [ Server,PatientProvider,DialogService,AuthService,AuthGuard ],
+  providers: [ Server,PatientProvider,DialogService,AuthService,AuthGuard, { provide: ErrorHandler, useClass: RavenErrorHandler } ],
   bootstrap:    [ AppComponent ],
   entryComponents:[DialogComponent]
 })
