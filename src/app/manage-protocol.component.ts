@@ -19,7 +19,7 @@ import { AppSettings } from './app-settings';
 		infusion : AppSettings.infusion
 	}
 	ngOnInit(): void{
-		this.getProtocol();
+		setTimeout(()=>this.getProtocol());
 	}
 	getProtocol(): void{
 		delete this.protocol;

@@ -32,11 +32,11 @@ import { AppSettings } from './app-settings';
 	}
 	isBusy: boolean
 	set busy(sub:Subscription){
-		// if(!sub)this.isBusy=false;
-		// else {
-		// 	this.isBusy=true;
-		// 	sub.add(()=>this.isBusy=false);
-		// }
+		if(!sub)this.isBusy=false;
+		else {
+			this.isBusy=true;
+			sub.add(()=>{setTimeout(()=>this.isBusy=false,100);});
+		}
 	}
 	getPatients(uhid? :string): Observable<Patient[]>{
 		return this.http.post(this.dataUrl+'getPatients',uhid).map((res)=>this.parseBody(res)).retryWhen((e)=>this.retryRequest(e)).catch(this.handleError);

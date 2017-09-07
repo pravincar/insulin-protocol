@@ -17,12 +17,14 @@ import { Server } from './server.service';
 	ngOnInit(): void{
 		if(this.route.snapshot.url[0].path=='transactions'){
 			this.route.params.subscribe(params=>{
-				this.server.busy=this.server.getTransactions().subscribe(forms=>this.processForms(forms));
+				setTimeout(()=>this.server.busy=this.server.getTransactions().subscribe(forms=>this.processForms(forms)));
 			});
 		}else{
 			this.route.params.subscribe(params=>{
-				this.pp.getPatient(+params['id']);
-				this.server.busy=this.server.getForms(+params['id']).subscribe(forms=>this.processForms(forms));
+				setTimeout(()=>{
+					this.pp.getPatient(+params['id']);
+					this.server.busy=this.server.getForms(+params['id']).subscribe(forms=>this.processForms(forms));
+				});				
 			});
 		}		
 	}

@@ -18,7 +18,7 @@ import { AppSettings } from './app-settings';
 	}
 	ngOnInit(): void{
 		let id=+this.route.snapshot.params['id'];
-		this.pp.getPatient(id);
+		setTimeout(()=>this.pp.getPatient(id));
 	}
 	saveProfile(): void{
 		this.server.busy=this.pp.savePatient().subscribe(patient=>{this.router.navigate(['patient-list'])},error=>this.error=error);

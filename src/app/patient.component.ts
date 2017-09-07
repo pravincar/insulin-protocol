@@ -21,7 +21,7 @@ import { PatientProvider } from './patient-provider.service';
 	}
 	ngOnInit(): void{
 		let id=+this.route.snapshot.params['id'];if(!id)return;
-		this.pp.getPatient(id);
+		setTimeout(()=>this.pp.getPatient(id));
 	}
 	goBack(): void{
 		this.router.navigate(['patient-list']);
