@@ -78,7 +78,14 @@ router.post('/getProfile',authCheck,parseText,function(req,res){
 });
 
 router.post('/saveForm',authCheck,parseJSON,function(req,res){
-    var form=req.body,patient;form.dt=new Date();form.savedBy=req.appUser;
+    var form=req.body,patient;
+    // For compatability with older versions where date is not submitted from the client
+    if(!form.dt){
+        form.dt=new Date();
+    }
+    // Storing the server date time as a JSON key - NOTE: this is not present for older forms
+    form.data.submittedDt = new Date();
+    form.savedBy=req.appUser;
     db.one("INSERT INTO forms(type,dt,savedBy,patientId,data) VALUES (${type},${dt},${savedBy},${patientId},${data}) RETURNING id",form)
     .then(rs =>{ form.id=rs.id;return db.one("SELECT * FROM patients WHERE id=$1",[form.patientId]);})
     .then(rs => protocolManager.process(rs,form))
@@ -152,7 +159,7 @@ ProtocolManager.prototype.save=function(protocol){
 ProtocolManager.prototype.recommend=function(patient,forms){
     return new Promise(function(resolve,reject){
         var profile=patient.profile||{},fp=new FormProcessor(profile.insulinDeliveryType,forms),dose;
-        if(!fp.isValid)return resolve({text:'Please enter a glucose measurement to get recommendations',error:1});
+        if(!fp.dataAvailable)return resolve({text:'Please enter a glucose measurement to get recommendations',error:1});
         if(profile.insulinDeliveryType=='subcutaneous'){
             protocolManager.get('subcutaneous').then(protocol=>{
                 var chart=protocol.data.chart,chartRow=chart.find(r=>r.t==fp.dosageType);
@@ -251,20 +258,27 @@ ProtocolManager.prototype.process=function(patient,form){//form is optional - if
 
 function FormProcessor(insulinDeliveryType,forms){
     this.insulinDeliveryType=insulinDeliveryType;
+    //Order in which the various dosage types are given during the day - used in calculation for previous and next dose
     this.order=['Before Breakfast','Before Lunch','Before Evening Snack','Before Dinner','Bedtime'];
+    //sorting in ascending order
     forms.sort((f1,f2) =>{return f1.id-f2.id;});
     var fh={};
     if(insulinDeliveryType==='subcutaneous'){
+        forms = forms.filter(f => f.type === 'subcutaneous')
         for(var i=0;i<forms.length;i++){
             var f=forms[i],dt=date.format(new Date(f.dt),'DD MMM YYYY');
-            if(!fh[f.type])fh[f.type]={};if(!fh[f.type][dt])fh[f.type][dt]={};fh[f.type][dt][f.data.dosageType]=f.data;
-            if(f.type=='subcutaneous'){this.isValid=true;if(f.data.dosageType)this.dosageType=f.data.dosageType;}
+            if(!fh[f.type])fh[f.type]={};
+            if(!fh[f.type][dt])fh[f.type][dt]={};fh[f.type][dt][f.data.dosageType]=f.data;
+            if(f.type=='subcutaneous'){
+                this.dataAvailable=true;
+                if(f.data.dosageType)this.dosageType=f.data.dosageType;
+            }
         }
         this.nextDosageType=this.order[this.order.findIndex(r=>r==this.dosageType)+1];
     }else if(insulinDeliveryType==='infusion'){
         forms=forms.filter(f => f.type==='infusion').reverse();
         fh={'n':forms[0],'n-1':forms[1]};
-        this.isValid=true;
+        this.dataAvailable=true;
     }
     this.fh=fh;
 }
@@ -277,7 +291,7 @@ FormProcessor.prototype.getValue=function(param,day,dosageType){
         var dt=day=='today'?date.format(new Date(),'DD MMM YYYY'):day=='yest'?date.format(date.addDays(new Date(),-1),'DD MMM YYYY'):null;
         var dose=dosageType=='same'?this.dosageType:dosageType=='next'?this.nextDosageType:dosageType;
         if(!fh)throw 'Form Hash is not defined';if(!type||!field)throw 'Invalid Param: '+param;if(!type)throw 'Invalid Day: '+day;
-        if(!this.isValid)throw 'FormProcessor should be checked for isValid before calling getValue';
+        if(!this.dataAvailable)throw 'FormProcessor should be checked for dataAvailable before calling getValue';
         return fh[type]&&fh[type][dt]&&fh[type][dt][dose]?fh[type][dt][dose][field]*1:undefined;    
     }else if(this.insulinDeliveryType==='infusion'){
         return fh[dosageType]&&fh[dosageType].data?fh[dosageType].data.plasmaGlucose*1:undefined;
