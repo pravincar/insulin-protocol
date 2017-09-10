@@ -6,6 +6,8 @@ import { PatientProvider } from './patient-provider.service';
 import { Form } from './form';
 import { Server } from './server.service';
 
+import * as moment from 'moment';
+
 import 'rxjs/add/operator/do';
 
 import { DialogService } from './dialog.service';
@@ -29,6 +31,7 @@ import { DialogService } from './dialog.service';
 	}
 	saveForm(): void{
 		this.form.patientId=this.patientId;this.form.type=this.type;
+		this.form.dt = moment(this.form.dt).format();
 		this.server.busy=this.server.saveForm(this.form).subscribe((rs: any)=>{
 			if(rs=='success'){
 				let diag=this.dialogService.show('Saved','The form submitted has been successfully saved.',[],'Close');
