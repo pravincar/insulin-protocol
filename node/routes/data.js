@@ -263,8 +263,8 @@ function FormProcessor(insulinDeliveryType,forms){
     //sorting in ascending order
     forms.sort((f1,f2) =>{return f1.id-f2.id;});
     var fh={};
-    if(insulinDeliveryType==='subcutaneous'){
-        forms = forms.filter(f => f.type === 'subcutaneous')
+    if(insulinDeliveryType === 'subcutaneous'){
+        forms = forms.filter(f => f.type === 'subcutaneous' || f.type === 'subcutaneousDose')
         for(var i=0;i<forms.length;i++){
             var f=forms[i],dt=date.format(new Date(f.dt),'DD MMM YYYY');
             if(!fh[f.type])fh[f.type]={};
@@ -275,8 +275,8 @@ function FormProcessor(insulinDeliveryType,forms){
             }
         }
         this.nextDosageType=this.order[this.order.findIndex(r=>r==this.dosageType)+1];
-    }else if(insulinDeliveryType==='infusion'){
-        forms=forms.filter(f => f.type==='infusion').reverse();
+    }else if(insulinDeliveryType === 'infusion'){
+        forms=forms.filter(f => f.type ==='infusion' || f.type === 'infusionDose').reverse();
         fh={'n':forms[0],'n-1':forms[1]};
         this.dataAvailable=true;
     }

@@ -21,7 +21,7 @@ app.get('*',function(req, res){
 
 // catch 404 and forward to error handler
 app.get(/(\.)+/,function(req, res, next) {
-  var err = new Error('catch 404 URL:',req.url);
+  var err = new Error('404: Please check server logs');
   err.status = 404;
   next(err);
 });
