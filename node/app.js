@@ -9,7 +9,7 @@ var app = express();
 // app.use(logger('dev'));
 app.use(cookieParser());
 app.use(compression());
-app.use('/data', require('./routes/data'));
+app.use('/data', require('./routes/data').router);
 
 
 // Serve files in the dist directory as static files
