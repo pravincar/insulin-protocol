@@ -2,7 +2,7 @@ const express = require('express');
 const router = new express.Router();
 const log=require('debug')('default');
 const pgp = require('pg-promise')();
-const db = pgp(process.env.DATABASE_URL);
+const db = pgp(process.env.DATABASE_URL + "sslmode=require");
 const date = require('date-and-time');
 const bodyParser = require('body-parser');
 const appSettings = require('../../src/app/app-settings.js').AppSettings;
