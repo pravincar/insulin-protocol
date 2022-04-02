@@ -29,7 +29,8 @@ h1 {
   background-size: cover;
 }
 .legal{
-  width:90%;background-color: #ff5722;color: #FFFFFF;font-weight: bold;margin:0 auto;border:1px solid #FFF;padding:4px;border-radius: 4px;line-height: 1.4em;
+  width: 80%;background-color: #ff5722;color: #FFFFFF;font-weight: bold;margin:0 auto;text-align: center;
+  border:1px solid #FFF;padding:4px;border-radius: 4px;line-height: 1.4em;
 }
 .appTitle{  
   position: absolute;
