@@ -1,0 +1,42 @@
+<div style="padding:65px 5px 0 5px;height:100%;box-sizing:border-box;overflow:scroll;">
+	<form (ngSubmit)="saveProfile()" #profileForm="ngForm" >
+		<md-input-container>
+			<input mdInput type="text" name="uhid" class="medium" placeholder="UHID" required [(ngModel)]="pp.patient.uhid">		
+		</md-input-container>
+		<md-input-container>
+			<input mdInput type="text" name="name" class="big" placeholder="Name" required [(ngModel)]="pp.patient.name">
+		</md-input-container>
+		<!-- <md-input-container>
+			<input mdInput type="date" name="dob" class="small" placeholder="Date of birth" required [ngModel]="pp.patient.dob | date: 'yyyy-MM-dd'" (ngModelChange)="pp.patient.dob=$event" >
+		</md-input-container> -->
+		<md-input-container>
+			<input mdInput type="text" name="bednum" class="small" placeholder="Bed Number" required [(ngModel)]="pp.patient.bednum">
+		</md-input-container>
+		<md-input-container>
+			<input mdInput type="number" name="weight" class="small" placeholder="Weight (Kgs)" required [(ngModel)]="pp.patient.profile.weight">
+		</md-input-container>								
+		<md-select placeholder="Diabetes Type" name="diabetes" class="big" required [(ngModel)]="pp.patient.profile.diabetes" >
+			<md-option value="Known Case" >Known Case</md-option>
+			<md-option value="New Onset">New Onset</md-option>
+		</md-select>
+		<md-input-container class="big">
+			<input mdInput type="number" step="0.1" name="preTransplantDose" placeholder="Pre-Transplant Insulin Dose (units/day)" required [(ngModel)]="pp.patient.profile.preTransplantDose">
+		</md-input-container>
+		<md-select placeholder="Insulin Delivery Type" name="insulinDeliveryType" class="medium" required [(ngModel)]="pp.patient.profile.insulinDeliveryType" >
+			<md-option value="infusion" >Infusion</md-option>
+			<md-option value="subcutaneous">Subcutaneous</md-option>
+		</md-select>
+		<br>
+		<br>
+		<md-select *ngIf="pp.patient.profile.insulinDeliveryType=='subcutaneous' && pp.patient.profile.subcutaneousColumn" placeholder="Subcutaneous Column" name="subcutaneousColumn" class="medium" required [(ngModel)]="pp.patient.profile.subcutaneousColumn" >
+			<md-option *ngFor="let item of getOptions('subcutaneous')" [value]=item.k >{{item.t}}</md-option>
+		</md-select>
+		<md-select *ngIf="pp.patient.profile.insulinDeliveryType=='infusion' && pp.patient.profile.infusionColumn" placeholder="Infusion Column" name="infusionColumn" class="medium" required [(ngModel)]="pp.patient.profile.infusionColumn" >
+			<md-option *ngFor="let item of getOptions('infusion')" [value]=item.k >{{item.t}}</md-option>
+		</md-select>		
+		<div style="text-align:center;margin-top:10px;">
+			<button md-raised-button type="submit" [disabled]="!profileForm.form.valid">Save</button>
+			<a md-button (click)="goBack()">Cancel</a>
+		</div>
+	</form>		
+</div>

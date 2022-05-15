@@ -1,0 +1,38 @@
+<div class="topfixed">
+	<md-toolbar color="primary" *ngIf="!showSearch">
+		<i class="material-icons" (click)="authService.sideNav.toggle()">account_circle</i>
+		<span>Home</span>
+		<span class="filler"></span>
+		<i class="material-icons" (click)="newPatient()">person_add</i>
+		<i class="material-icons" (click)="showSearch=true">search</i>	
+	</md-toolbar>
+	<md-toolbar *ngIf="showSearch">
+		<i class="material-icons" (click)="searchBack()">arrow_back</i>
+		<md-input-container floatPlaceholder="never" style="width:100%;" *ngIf="showSearch">
+			<input mdInput #searchBox type="search" (keyup)="$event.keyCode==13 && onSearch(searchBox.value)" name="search" placeholder="Search by UHID">
+		</md-input-container>
+	</md-toolbar>	
+</div>
+<div style="padding:60px 5px 0 5px;box-sizing:border-box;overflow:scroll;height:100%;">	
+	<md-card *ngFor="let patient of patients">
+		<div style="display: flex;flex-wrap: nowrap;">
+			<div (click)="showForm(patient.id)" class="patBox">
+				<div style="font-size: 20px;">{{patient.name}}</div>
+				<div style="margin-top: 7px;">
+					<label>UHID: </label> {{patient.uhid}} | <label>Bed : </label>{{patient.bednum}}
+				</div>
+			</div>					
+			<i (click)="editPatient(patient.id)" class="material-icons">mode_edit</i>
+			<i (click)="formsList(patient.id)" class="material-icons">list</i>	
+		</div>		
+	</md-card>
+	<div *ngIf="!patients || !patients.length" style="text-align:center;">
+		<div style="margin:2em auto;">
+			No patient found<br><br>Add a new patient to proceed	
+		</div>	
+		<div style="margin:1em auto;">
+			<button md-raised-button (click)="newPatient()">Add a patient</button>	
+		</div>	
+	</div>
+	
+</div>

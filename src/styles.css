@@ -1,0 +1,110 @@
+:root {
+  --orange-red: #ff5722;
+}
+html, body, material-app, md-sidenav-container, .mainwindow {
+  margin: 0;width: 100%;height: 100%; max-width:800px;
+}
+body{font-family:Roboto,Helvetica,Arial,Sans-Serif;color:#222;}
+.loading{font-size:20px;color:#CCC;padding-top:50px;text-align: center;}
+.nodata{color:#CCC;margin-top:5px;text-align:center;}
+.mainwindow{position:relative;overflow:hidden;}
+.topfixed{position:absolute;top:0;left:0;width:100%;z-index:10;background-color: #FFF;}
+
+h1 {
+  color: #369;
+  font-size: 250%;
+}
+.splashScreen{
+  height:100%;
+  width: 100%;
+  max-width: 800px;
+  background-color: #000; 
+  background-image: url(assets/splashscreen.jpg); 
+  background-repeat: no-repeat; 
+  background-position: center;
+  background-attachment: fixed;       
+  webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+.legal{
+  width: 80%;background-color: #ff5722;color: #FFFFFF;font-weight: bold;margin:0 auto;text-align: center;
+  border:1px solid #FFF;padding:4px;border-radius: 4px;line-height: 1.4em;
+}
+.appTitle{  
+  position: absolute;
+  top: 34.5%;
+  width: 100%;
+  font-size: 20px;
+  font-weight: 900;
+  letter-spacing: 1.5px;
+  text-align: center;
+  color: #ff5722;
+  color: var(--orange-red);
+}
+.insulin {
+  margin-top: 20px;
+  width: 39.4px;
+  height: 58.8px;
+  object-fit: contain;
+}
+.profileBox{
+  height: 35%;
+  width: 100%;
+  background-color: #F4F4F4;
+  text-align: center;
+}
+.profileImg{
+  height: 33%;
+  padding-top: 21%;
+}
+.sideNavOption{
+  height: 10%;
+  font-size: 18px;
+  padding-left: 8.5%;
+  border-bottom: 2px solid #e4e4e4;
+}
+
+.padded{padding:5px;}
+
+.patBox{display:inline-block;flex:1 1 auto;}
+
+.fright{float:right;} .filler{flex:1 1 auto;}
+.full{width:100%;}
+.fullButton{width:90%;max-width:350px;margin-bottom: 10px !important;}
+.big{width:300px;margin-top:5px;}
+.medium{width:200px;margin-top:5px;}
+.small{width:100px;margin-top:5px;}
+.centered{text-align:center;}
+
+.table{border-collapse: collapse;width:100%;}
+.table td,th{border:1px solid #AAA;text-align:center;}
+.table td{font-size:12px;}
+
+.spinner{margin:0 auto;}
+
+.material-icons {
+  cursor: pointer;
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;  /* Preferred icon size */
+  padding:4px;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+  /* Support for all WebKit browsers. */
+  -webkit-font-smoothing: antialiased;
+  /* Support for Safari and Chrome. */
+  text-rendering: optimizeLegibility;
+
+  /* Support for Firefox. */
+  -moz-osx-font-smoothing: grayscale;
+
+  /* Support for IE. */
+  font-feature-settings: 'liga';
+}
