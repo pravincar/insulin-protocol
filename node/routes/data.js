@@ -113,16 +113,29 @@ router.post('/saveForm', authCheck, parseJSON, function (req, res) {
     form.data.submittedDt = new Date();
     form.savedBy = req.appUser;
     db.one("INSERT INTO forms(type,dt,savedBy,patientId,data) VALUES (${type},${dt},${savedBy},${patientId},${data}) RETURNING id", form)
-        .then(rs => { form.id = rs.id; return db.one("SELECT * FROM patients WHERE id=$1", [form.patientId]); })
+        .then(rs => {
+            form.id = rs.id;
+            return db.one("SELECT * FROM patients WHERE id=$1", [form.patientId]);
+        })
         .then(rs => protocolManager.process(rs, form))
-        .then(rs => { patient = rs; return db.none("UPDATE patients SET profile=${profile} WHERE id=${id}", patient); })
+        .then(rs => {
+            patient = rs;
+            return db.none("UPDATE patients SET profile=${profile} WHERE id=${id}", patient);
+        })
         .then(rs => {
             var recommedation;
             if (form.type == 'subcutaneous' || form.type == 'infusion')
                 db.any("SELECT * FROM forms WHERE patientId=$1", [form.patientId])
                     .then(rs => protocolManager.recommend(patient, rs))
-                    .then(rs => { recommedation = rs; recommedation.parentId = form.id; let f = { type: form.type + 'Recommedation', savedBy: form.savedBy, patientId: form.patientId, data: recommedation, dt: new Date() }; return db.one("INSERT INTO forms(type,dt,savedBy,patientId,data) VALUES (${type},${dt},${savedBy},${patientId},${data}) RETURNING id", f); })
-                    .then(rs => { recommedation.id = rs.id; res.json(recommedation); }, e => { log(e); res.end('fail'); });
+                    .then(rs => {
+                        recommedation = rs; recommedation.parentId = form.id;
+                        let f = { type: form.type + 'Recommedation', savedBy: form.savedBy, patientId: form.patientId, data: recommedation, dt: new Date() };
+                        return db.one("INSERT INTO forms(type,dt,savedBy,patientId,data) VALUES (${type},${dt},${savedBy},${patientId},${data}) RETURNING id", f);
+                    })
+                    .then(rs => {
+                        recommedation.id = rs.id;
+                        res.json(recommedation);
+                    }, e => { log(e); res.end('fail'); });
             else res.send('success');
         }).catch(e => { log(e); res.end('fail'); });
 });
