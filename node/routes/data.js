@@ -188,7 +188,7 @@ ProtocolManager.prototype.recommend=function(patient, forms) {
     // check if data is available
     if (!fp.dataAvailable) throw new Error('No data available for analysis');
     if (!profile.subcutaneousColumn) throw new Error('Subcutaneous Column not defined for patientId:'+patient.id);
-    if (!fp.getValue('bg', 'today', 'same')) throw new Error('BG not measured');
+    //if (!fp.getValue('bg', 'today', 'same')) throw new Error('BG not measured'); // Disabled : causes an error for infusion 
 
     return new Promise(function(resolve, reject) {
         if (profile.insulinDeliveryType=='subcutaneous') {
